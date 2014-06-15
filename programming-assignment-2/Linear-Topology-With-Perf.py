@@ -1,6 +1,6 @@
 from mininet.net import Mininet
 from mininet.topo import Topo
-from mininet.util import irange, dumpNodeConnections 
+from mininet.util import irange, dumpNodeConnections
 from mininet.log import setLogLevel
 
 class LinearTopo(Topo):
@@ -16,7 +16,6 @@ class LinearTopo(Topo):
 			self.addLink( host, switch)
 			if lastSwitch: self.addLink( switch, lastSwitch)
 			lastSwitch = switch
-	
 
 def simpleTest():
 	"Create and test a simple network"

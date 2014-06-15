@@ -1,9 +1,8 @@
 from mininet.net import Mininet
 from mininet.topo import Topo
-from mininet.net import Mininet
 from mininet.node import CPULimitedHost
 from mininet.link import TCLink
-from mininet.util import irange, dumpNodeConnections 
+from mininet.util import irange, dumpNodeConnections
 from mininet.log import setLogLevel
 
 class LinearTopo(Topo):
@@ -19,7 +18,7 @@ class LinearTopo(Topo):
 			# 10 Mbps, 5ms delay, 1% loss, 1000 packet queue
 			self.addLink( host, switch, bw=10, delay='5ms', max_queue_size=1000, use_htb=True)
 			#self.addLink( host, switch, bw=10, delay='50ms', loss=1, max_queue_size=1000, use_htb=True)
-			if lastSwitch: 
+			if lastSwitch:
 				self.addLink( switch, lastSwitch, bw=10, delay='5ms', max_queue_size=1000, use_htb=True)
 				#self.addLink( switch, lastSwitch, bw=10, delay='50ms', loss=1, max_queue_size=1000, use_htb=True)
 			lastSwitch = switch
