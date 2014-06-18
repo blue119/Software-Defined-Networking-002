@@ -47,19 +47,19 @@ class FVTopo(Topo):
 
         # Add switch links
         # Specified to the port numbers to avoid any port number consistency issue
-        
+
         self.addLink('s2', 's1', port1=1, port2=1, **http_link_config)
         self.addLink('s3', 's1', port1=1, port2=2, **video_link_config)
         self.addLink('h1', 's1', port1=1, port2=3, **host_link_config)
         self.addLink('h2', 's1', port1=1, port2=4, **host_link_config)
-        
+
         self.addLink('s2', 's4', port1=2, port2=1, **http_link_config)
         self.addLink('s3', 's4', port1=2, port2=2, **video_link_config)
         self.addLink('h3', 's4', port1=1, port2=3, **host_link_config)
         self.addLink('h4', 's4', port1=1, port2=4, **host_link_config)
-        
+
         info( '\n*** printing and validating the ports running on each interface\n' )
-        
+
 
 
 def startNetwork():

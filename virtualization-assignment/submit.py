@@ -7,7 +7,7 @@ Professor: Nick Feamster
 Teaching Assistant: Arpit Gupta
 """
 
-### The only things you'll have to edit (unless you're porting this script over to a different language) 
+### The only things you'll have to edit (unless you're porting this script over to a different language)
 ### are at the bottom of this file.
 
 import urllib
@@ -27,14 +27,14 @@ class NullDevice:
   def write(self, s):
     pass
 
-def submit():   
+def submit():
   print '==\n== [sandbox] Submitting Solutions \n=='
-  
+
   (login, password) = loginPrompt()
   if not login:
     print '!! Submission Cancelled'
     return
-  
+
   print '\n== Connecting to Coursera ... '
 
   # Part Identifier
@@ -101,8 +101,8 @@ def challengeResponse(email, passwd, challenge):
   strAnswer = ''
   for i in range(0, len(digest)):
     strAnswer = strAnswer + digest[i]
-  return strAnswer 
-  
+  return strAnswer
+
 def challenge_url():
   """Returns the challenge url."""
   return "https://class.coursera.org/" + URL + "/assignment/challenge"
@@ -127,7 +127,7 @@ def submitSolution(email_address, ch_resp, sid, output, source, state, ch_aux):
              'challenge_response' : ch_resp, \
              'state' : state \
            }
-  url = submit_url()  
+  url = submit_url()
   data = urllib.urlencode(values)
   req = urllib2.Request(url, data)
   response = urllib2.urlopen(req)
@@ -136,11 +136,11 @@ def submitSolution(email_address, ch_resp, sid, output, source, state, ch_aux):
   result = 0
   return result, string
 
-## This collects the source code (just for logging purposes) 
+## This collects the source code (just for logging purposes)
 def source(partIdx):
   # open the file, get all lines
   f = open(sourceFiles[partIdx])
-  src = f.read() 
+  src = f.read()
   f.close()
   return src
 
@@ -148,9 +148,9 @@ def source(partIdx):
 
 ############ BEGIN ASSIGNMENT SPECIFIC CODE - YOU'LL HAVE TO EDIT THIS ##############
 
-import os 
-from mininet.net import Mininet                                                       
-from mininet.node import Controller  
+import os
+from mininet.net import Mininet
+from mininet.node import Controller
 from mininet.link import TCLink
 from mininet.log import setLogLevel, info
 from mininetSlice import FVTopo
@@ -164,50 +164,50 @@ import os, time
 URL = 'sdn-002'
 
 # the "Identifier" you used when creating the part
-partIds = ['agPA41', 'agPA42']                        
+partIds = ['agPA41', 'agPA42']
 # used to generate readable run-time information for students
-partFriendlyNames = ['Topology based slicing', 'Advanced flowspace slicing'] 
+partFriendlyNames = ['Topology based slicing', 'Advanced flowspace slicing']
 # source files to collect (just for our records)
-sourceFiles = ['%s/pox/pox/misc/topologySlice.py' % os.environ[ 'HOME' ], 
+sourceFiles = ['%s/pox/pox/misc/topologySlice.py' % os.environ[ 'HOME' ],
                '%s/pox/pox/misc/videoSlice.py' % os.environ[ 'HOME' ] ]
 
-class TopologySliceController( Controller ):  
-                                                                     
-  "Custom Controller class to invoke POX"                                     
-  def start( self ):                                                                                 
-    "Start POX Controller"                                                                    
-    self.pox = '%s/pox/pox.py' % os.environ[ 'HOME' ]  
-    self.cmdPrint( self.pox, 'misc.topologySlice &' )  
-                                                   
-  def stop( self ):                                                                                  
-    "Stop POX"                                                                                     
-    self.cmdPrint( 'kill %' + self.pox )    
+class TopologySliceController( Controller ):
 
-    
-class VideoSliceController( Controller ):  
-                                                                     
-  "Custom Controller class to invoke POX"                                     
-  def start( self ):                                                                                 
-    "Start POX Controller"                                                                    
-    self.pox = '%s/pox/pox.py' % os.environ[ 'HOME' ]  
-    self.cmdPrint( self.pox, 'misc.videoSlice &' )  
-                                                   
-  def stop( self ):                                                                                  
-    "Stop POX"                                                                                     
-    self.cmdPrint( 'kill %' + self.pox )                   
-         
-                
- 
+  "Custom Controller class to invoke POX"
+  def start( self ):
+    "Start POX Controller"
+    self.pox = '%s/pox/pox.py' % os.environ[ 'HOME' ]
+    self.cmdPrint( self.pox, 'misc.topologySlice &' )
+
+  def stop( self ):
+    "Stop POX"
+    self.cmdPrint( 'kill %' + self.pox )
+
+
+class VideoSliceController( Controller ):
+
+  "Custom Controller class to invoke POX"
+  def start( self ):
+    "Start POX Controller"
+    self.pox = '%s/pox/pox.py' % os.environ[ 'HOME' ]
+    self.cmdPrint( self.pox, 'misc.videoSlice &' )
+
+  def stop( self ):
+    "Stop POX"
+    self.cmdPrint( 'kill %' + self.pox )
+
+
+
 def output(partIdx):
   """Uses the student code to compute the output for test cases."""
   outputString = ''
-  
-  if partIdx == 0: # This is part1: 
+
+  if partIdx == 0: # This is part1:
     print "a. Firing up Mininet"
     #setLogLevel('info')
     topo = FVTopo()
-    net = Mininet( topo=topo, link = TCLink, controller=TopologySliceController, autoSetMacs=True )                                       
-    net.start()          
+    net = Mininet( topo=topo, link = TCLink, controller=TopologySliceController, autoSetMacs=True )
+    net.start()
     time.sleep(1)
 
     print "b. Starting Test"
@@ -215,16 +215,16 @@ def output(partIdx):
     outputString = str(net.pingAll())
     print "The output string is: ",outputString
 
-    
+
     print "c. Stopping Mininet"
     net.stop()
-    
-  if partIdx == 1: # This is part2: 
+
+  if partIdx == 1: # This is part2:
     print "a. Firing up Mininet"
     #setLogLevel('info')
     topo = FVTopo()
-    net = Mininet( topo=topo, link = TCLink, controller=VideoSliceController, autoSetMacs=True )                                       
-    net.start()          
+    net = Mininet( topo=topo, link = TCLink, controller=VideoSliceController, autoSetMacs=True )
+    net.start()
     time.sleep(1)
 
     print "b. Starting Test"
@@ -234,18 +234,18 @@ def output(partIdx):
     h2 = net.get('h2')
     h3 = net.get('h3')
     h4 = net.get('h4')
-    
+
     # Start the servers
     h3.cmdPrint('iperf -s -p 80 &')
     h4.cmdPrint('iperf -s -p 22 &')
     outputString += h1.cmd('iperf -c 10.0.0.3 -p 80 -t 2 -i 1')
     outputString += h2.cmd('iperf -c 10.0.0.4 -p 22 -t 2 -i 1')
-    
-    
+
+
     print outputString
     print "c. Stopping Mininet"
     net.stop()
-    
+
   return outputString.strip()
 
 submit()
