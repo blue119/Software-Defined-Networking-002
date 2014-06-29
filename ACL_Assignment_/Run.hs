@@ -35,7 +35,7 @@
   Coursera:
     Software Defined Networking (SDN) course
     Module X Programming Assignment
-  
+
   Professor: Nick Feamster
   Developer: Muhammad Shahbaz
 -}
@@ -83,18 +83,19 @@ h3 = genHdr([("inport",     2)
           2. Write "srcmac"=4321 and "dstmac"=1234 at index 1
         (Hint: look at the Apps/Passthrough/Run.hs file on how to use the WRT instruction)
 -}
-
+c0 = WRT(mtac_tbl, [("dstmac", 5432), ("srcmac", 6543)], 0)  -- write inport=1 in mt_t table at index 0
+c1 = WRT(mtac_tbl, [("dstmac", 1234), ("srcmac", 4321)], 1)  -- write inport=1 in mt_t table at index 0
 
 -- Input sequence
 is = [
 {- Test control stream
   TODO: Uncomment line 90 and 91 by removing --
 -}
---      CTRL(c0)
---    , CTRL(c1),
-      HDR(h0) 
-    , HDR(h1) 
-    , HDR(h2) 
+      CTRL(c0)
+    , CTRL(c1),
+      HDR(h0)
+    , HDR(h1)
+    , HDR(h2)
     , HDR(h3)]
 
 -- Emulate the code
@@ -102,10 +103,10 @@ emulateEx :: [Hdr]
 emulateEx = emulate(ic, is, tc)
 
 -- Profile the code
-profileEx :: String 
+profileEx :: String
 profileEx = profile(ic, is, tc)
 
 -- main
-main = do 
+main = do
         putStrLn $ prettyPrint $ emulateEx
         putStrLn                 profileEx

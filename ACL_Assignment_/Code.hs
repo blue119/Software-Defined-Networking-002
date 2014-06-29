@@ -35,7 +35,7 @@
   Coursera:
     Software Defined Networking (SDN) course
     Module X Programming Assignment
-  
+
   Professor: Nick Feamster
   Developer: Muhammad Shahbaz
 -}
@@ -62,10 +62,10 @@ mtch_ptrn = [("dstmac", "srcmac")]                          -- pattern for loadi
 -- Modify table specs with default values
 mdfy_size = tbl_size                                         -- table size
 mdfy_tbl  = Dynamic("mdfy0", (mdfy_size, ["outport"]))       -- dynamic table "mdfy0"
-mdfy_val  = Static([[("outport", 0)] | x <- [1..mdfy_size]]) -- default values      
+mdfy_val  = Static([[("outport", 0)] | x <- [1..mdfy_size]]) -- default values
 mdfy_ptrn = [("outport", "inport")]                          -- pattern for loading the modify table
 
-{- 
+{-
   TODO: Specify a dynamic table for implementing access control.
         The table should have the following specs:
           1. Two columns for holding source and destination MAC pair i.e., "srcmac" and "dstmac"
@@ -74,7 +74,13 @@ mdfy_ptrn = [("outport", "inport")]                          -- pattern for load
         (Hint: see how the match/modify tables have been defined above)
 -}
 
-
+--  ACL matching on multiple fields
+--  https://piazza.com/class/hvjn9udjegm75q?cid=1045
+mtac_tbl_size = 5
+mtac_size = mtac_tbl_size                                                   -- table size
+mtac_tbl  = Dynamic("mtac0", (mtac_size, ["dstmac", "srcmac"]))             -- dynamic table "mdfy0"
+mtac_val  = Static([[("dstmac", 0), ("srcmac", 0)] | x <- [1..mtac_size]])  -- default values
+mtac_ptrn = ["srcmac"]                                                      -- pattern for loading the modify table
 
 -- Initialisation code for MAC learning with access control
 ic = [MKT(mtch_tbl, mtch_val) -- create match table with given table type and default values
@@ -84,9 +90,8 @@ ic = [MKT(mtch_tbl, mtch_val) -- create match table with given table type and de
   TODO: Create the ACL table with the defined specs using the MKT instruction.
         (Hint: see how the match/modify tables are created in the instructions, above)
 -}
-
-
-    ]                                  
+    ,MKT(mtac_tbl, mtac_val)  -- create modify table with given table type and default values
+    ]
 
 -- Topology code for MAC learning with access control
 tc = [
@@ -100,15 +105,16 @@ tc = [
     , OPF("outport", "inport", Xor, _1s)       -- set "outport" (bitmap) to all 1s except for the "inport" i.e., flood the packet
     , OPR("r", "r", Add, 1)                    -- increment register "r" i.e., move the current index to next row
     , BRR("r", Lt, tbl_size, "lbl_acl")        -- if (register "r" less than tbl_size) then jump to label "lbl_acl" else goto next instruction
-    , LDR("r", 0)                              -- set register "r" to 0 
-    , LBL("lbl_acl")                           -- label "lbl_acl"  
-    
+    , LDR("r", 0)                              -- set register "r" to 0
+    , LBL("lbl_acl")                           -- label "lbl_acl"
+
 {- Access Control
   TODO: Add assembly code for implementing access control using BRTF and DRP.
         1. Use the BRTF instruction to compare the header with the ACL table
         2. Use the DRP instruction to tag the header as dropped
 -}
+    , BRTF(mtac_tbl, "i", "lbl_end")
+    , DRP
 
-    
     , LBL("lbl_end")                           -- label "lbl_end"
     , HLT]                                     -- halt
